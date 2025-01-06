@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ticket Support System Example Project using Laravel 10 + Livewire 3
 
 This is an example project for a Ticket Support System.
@@ -87,3 +88,7 @@ When the new ticket is created, admin should get an email with the link to the E
 - Run `./dock start`
 - Launch `http://localhost:8000/` in your browser
 - You can login as admin to manage data with default credentials `admin@admin.com` - `password`
+=======
+# Ticket
+Ticketing
+>>>>>>> 9a2757aca2d85992ef7fbd5814ccd3721c03195e
