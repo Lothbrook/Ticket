@@ -23,7 +23,7 @@ class ListTicket extends Component
 
     public function deleteTicket(Ticket $ticket): void
     {
-        $this->authorize('manage', $ticket);
+        $this->authorize('manage tickets');
 
         $title = $ticket->title;
 

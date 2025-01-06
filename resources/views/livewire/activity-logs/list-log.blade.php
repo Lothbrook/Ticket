@@ -5,10 +5,10 @@
         <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-4 font-medium text-gray-400">Title</th>
+                    <th scope="col" class="px-6 py-4 font-medium text-gray-400">Titre</th>
                     <th scope="col" class="px-6 py-4 font-medium text-gray-400">Description</th>
-                    <th scope="col" class="px-6 py-4 font-medium text-gray-400">Caused By</th>
-                    <th scope="col" class="px-6 py-4 font-medium text-gray-400">Created</th>
+                    <th scope="col" class="px-6 py-4 font-medium text-gray-400">Causé par</th>
+                    <th scope="col" class="px-6 py-4 font-medium text-gray-400">Créé</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 border-t border-gray-100">
@@ -16,12 +16,12 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 font-medium text-gray-900">
                             <a href="{{ route('logs.show', $log) }}" class="text-blue-700 hover:text-blue-900">
-                                {{ $log->subject->title }}
+                                {{ $log->subject->title ?? 'No Subject' }}
                             </a>
                         </td>
                         <td class="px-6 py-4 font-medium text-gray-900">{{ $log->description }}</td>
                         <td class="px-6 py-4 font-medium text-gray-900">{{ $log->causer?->name }}</td>
-                        <td class="px-6 py-4 font-medium text-gray-900">{{ $log->created_at->diffForHumans() }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900">{{ $log->created_at->locale('fr')->diffForHumans() }}</td>
                     </tr>
                 @endforeach
             </tbody>

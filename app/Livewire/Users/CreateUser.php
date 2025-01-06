@@ -3,6 +3,7 @@
 namespace App\Livewire\Users;
 
 use App\Models\User;
+use App\Models\Societe;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\Validate;
@@ -24,6 +25,10 @@ class CreateUser extends Component
     #[Validate(['required', 'exists:roles,id'])]
     public string $role = '';
 
+    #[Validate(['required', 'exists:societes,id'])]
+    public string $id_societe = '';
+    
+
     public function save(): Redirector|RedirectResponse
     {
         $this->authorize('manage', User::class);
@@ -31,7 +36,7 @@ class CreateUser extends Component
         $this->validate();
 
         $user = User::create(
-            $this->only(['name', 'email', 'password'])
+            $this->only(['name', 'email', 'password','id_societe','phone'])
         );
 
         $role = Role::whereId($this->role)->first();
@@ -45,6 +50,7 @@ class CreateUser extends Component
     {
         return view('livewire.users.create-user', [
             'roles' => Role::all(),
+            'societes' => Societe::all(),
         ]);
     }
 }

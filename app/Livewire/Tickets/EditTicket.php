@@ -27,6 +27,7 @@ class EditTicket extends Component
         $this->form->status = $ticket->status;
         $this->form->priority = $ticket->priority;
         $this->form->agentAssigned = $ticket->agent_id;
+        $this->form->user_id = $ticket->user_id;
 
         $this->form->selectedCategories = $ticket->categories()->pluck('id')->toArray();
         $this->form->selectedLabels = $ticket->labels()->pluck('id')->toArray();
@@ -38,10 +39,15 @@ class EditTicket extends Component
 
         $this->form->validate();
 
-        $properties = $this->form->only(['title', 'status', 'description', 'priority']);
+        $properties = $this->form->only(['title', 'status', 'description', 'priority','user_id']);
         if (! empty($this->form->agentAssigned) && auth()->user()->hasRole('Admin')) {
             $properties += ['agent_id' => $this->form->agentAssigned];
         }
+        if (!empty($this->form->user_id) && auth()->user()->hasRole('Admin')) {
+            $properties['user_id'] = $this->form->user_id; // Assuming 'user_id' is the foreign key for the requester
+        }
+
+        
 
         $this->ticket->update($properties);
         $this->ticket->categories()->sync($this->form->selectedCategories);
@@ -64,6 +70,7 @@ class EditTicket extends Component
             'categories' => Category::all(),
             'labels' => Label::all(),
             'agents' => User::role('Agent')->get(),
+            'users' => User::all(),
         ]);
     }
 }

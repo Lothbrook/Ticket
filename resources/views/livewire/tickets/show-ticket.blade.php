@@ -1,9 +1,9 @@
 <div x-data="{ isShowingLogs: false, isShowingComments: true }">
     <x-status />
-    <div class="mb-5 text-2xl font-bold">Ticket Information</div>
+    <div class="mb-5 text-2xl font-bold">Informations sur le Ticket </div>
     <div class="rounded-lg border border-gray-200 bg-white shadow-md">
         <div class="grid grid-cols-6 gap-6 p-4">
-            <div class="font-bold">Title</div>
+            <div class="font-bold">Titre</div>
             <div class="col-span-5">{{ ucfirst($ticket->title) }}</div>
             <div class="font-bold">Status</div>
             <div class="col-span-5">
@@ -23,7 +23,7 @@
                     </span>
                 @endif
             </div>
-            <div class="font-bold">Priority</div>
+            <div class="font-bold">Priorité</div>
             <div class="col-span-5">
                 <span @class([
                     'inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold',
@@ -31,29 +31,36 @@
                     'bg-yellow-200 text-yellow-700' => $ticket->priority === 'medium',
                     'bg-red-200 text-red-700' => $ticket->priority === 'high',
                 ])>
-                    {{ ucfirst($ticket->priority) }}
+                    @php
+                        $priorityFr = match($ticket->priority) {
+                            'low' => 'Faible',
+                            'medium' => 'Moyen',
+                            'high' => 'Élevé',
+                        };
+                    @endphp
+                    {{ $priorityFr }}
                 </span>
             </div>
             <div class="font-bold">Description</div>
             <div class="col-span-5">{{ $ticket->description }}</div>
-            <div class="font-bold">Categories</div>
+            <div class="font-bold">Catégories</div>
             <div class="col-span-5">
                 @foreach ($ticket->categories as $category)
                     <span class="rounded-full bg-blue-200 px-2 py-1 text-xs text-blue-800">{{ $category->name }}</span>
                 @endforeach
             </div>
-            <div class="font-bold">Labels</div>
+            <div class="font-bold">Étiquettes</div>
             <div class="col-span-5">
                 @foreach ($ticket->labels as $label)
                     <span
                         class="rounded-full bg-orange-200 px-2 py-1 text-xs text-orange-800">{{ $label->name }}</span>
                 @endforeach
             </div>
-            <div class="font-bold">Created By</div>
+            <div class="font-bold">Créé par</div>
             <div class="col-span-5">{{ $ticket->user->name }}</div>
-            <div class="font-bold">Agent Assigned</div>
+            <div class="font-bold">Agent assigné</div>
             <div class="col-span-5">{{ $ticket->agent->name ?? '' }}</div>
-            <div class="font-bold">Attachment(s)</div>
+            <div class="font-bold">Pièce(s) jointe(s)</div>
             <div class="col-span-5">
                 @foreach ($ticket->getMedia('attachments') as $attachment)
                     <a href="{{ $attachment->getUrl() }}"
@@ -66,12 +73,12 @@
         </div>
     </div>
     <div class="flex gap-5">
-        <button @click="isShowingLogs = !isShowingLogs" x-text="isShowingLogs ? 'Hide Logs' : 'Show Logs'"
-            class="mt-4 rounded-lg border border-green-500 bg-green-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-green-700 hover:bg-green-700 focus:ring focus:ring-green-200 disabled:cursor-not-allowed disabled:border-green-300 disabled:bg-green-300">
+        <button @click="isShowingLogs = !isShowingLogs" x-text="isShowingLogs ? 'Masquer les logs' : 'Afficher les logs'"
+            class="mt-4 rounded-lg border border-blue-950 bg-blue-950 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-blue-700 hover:bg-blue-700 focus:ring focus:ring-blue-200 disabled:cursor-not-allowed disabled:border-blue-300 disabled:bg-blue-300">
         </button>
         <button @click="isShowingComments = !isShowingComments"
-            x-text="isShowingComments ? 'Hide Comments' : 'Show Comments'"
-            class="mt-4 rounded-lg border border-green-500 bg-green-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-green-700 hover:bg-green-700 focus:ring focus:ring-green-200 disabled:cursor-not-allowed disabled:border-green-300 disabled:bg-green-300">
+            x-text="isShowingComments ? 'Masquer les commentaires' : 'Affichers les commentaires'"
+            class="mt-4 rounded-lg border border-blue-950 bg-blue-950 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-blue-700 hover:bg-blue-700 focus:ring focus:ring-blue-200 disabled:cursor-not-allowed disabled:border-blue-300 disabled:bg-blue-300">
         </button>
     </div>
     <div x-show="isShowingComments" wire:transition>

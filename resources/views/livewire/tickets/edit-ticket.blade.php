@@ -1,96 +1,115 @@
-<div class="max-w-xl">
-    <div class="mb-5 text-2xl font-bold">Edit Ticket</div>
-    <form wire:submit="save" class="space-y-5">
-        <div>
-            <label for="title"
-                class="mb-1 block text-sm font-medium text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">Title</label>
-            <input type="text" id="title" wire:model="form.title" @class([
-                'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50',
-                'border-red-300 focus:border-red-300 focus:ring-red-200' => $errors->has(
-                    'form.title'),
-            ]) placeholder="Title" />
-            @error('form.title')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-            @enderror
+<div class="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+    <div class="mb-8 text-3xl font-extrabold text-gray-800">Modifier Ticket</div>
+    <form wire:submit="save" class="space-y-10">
+        <!-- Première ligne : Titre et Priorité -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="space-y-2">
+                <label for="title" class="block text-sm font-semibold text-gray-700">
+                    Titre du Ticket <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="title" wire:model="form.title" 
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
+                    {{ $errors->has('form.title') ? 'border-red-500 focus:ring-red-300' : '' }}" 
+                    placeholder="Titre du Ticket">
+                @error('form.title')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="space-y-2">
+                <label for="priority" class="block text-sm font-semibold text-gray-700">
+                    Priorité <span class="text-red-500">*</span>
+                </label>
+                <select wire:model="form.priority" 
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label for="status"
-                class="mb-1 block text-sm font-medium text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">Status</label>
-            <select wire:model.live="form.status"
-                class="focus:border-primary-300 focus:ring-primary-200 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50">
-                <option value="open">Open</option>
-                <option value="closed">Closed</option>
-            </select>
-        </div>
-        <div>
-            <label for="priority"
-                class="mb-1 block text-sm font-medium text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">Priority</label>
-            <select wire:model.live="form.priority"
-                class="focus:border-primary-300 focus:ring-primary-200 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-        </div>
-        <div>
-            <label for="description"
-                class="mb-1 block text-sm font-medium text-gray-700 after:ml-0.5 after:text-red-500 after:content-['*']">Description</label>
-            <textarea type="description" id="description" wire:model="form.description" rows="5" @class([
-                'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50',
-                'border-red-300 focus:border-red-300 focus:ring-red-200' => $errors->has(
-                    'form.description'),
-            ])
-                placeholder="Explain the issue..."></textarea>
+
+        <!-- Description -->
+        <div class="space-y-4">
+            <label for="description" class="block text-sm font-semibold text-gray-700 mb-2 mt-2">
+                Description <span class="text-red-500">*</span>
+            </label>
+            <textarea id="description" wire:model="form.description" rows="5" 
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
+                {{ $errors->has('form.description') ? 'border-red-500 focus:ring-red-300' : '' }}" 
+                placeholder="Expliquez le problème..."></textarea>
             @error('form.description')
                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
             @enderror
         </div>
-        <div>
-            <label for="categories" class="mb-1 block text-sm font-medium text-gray-700">Categories</label>
-            <div class="flex space-x-6">
-                @foreach ($categories as $category)
-                    <label class="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" value="{{ $category->id }}" wire:model="form.selectedCategories"
-                            class="text-primary-600 focus:border-primary-300 focus:ring-primary-200 h-4 w-4 rounded border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
-                        <span>{{ $category->name }}</span>
-                    </label>
-                @endforeach
+
+        <!-- Catégories et Labels -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="space-y-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 mt-2">Catégories</label>
+                <div class="flex flex-wrap gap-4">
+                    @foreach ($categories as $category)
+                        <label class="inline-flex items-center space-x-2 text-sm">
+                            <input type="checkbox" value="{{ $category->id }}" wire:model="form.selectedCategories" 
+                                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <span>{{ $category->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+            <div class="space-y-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 mt-2">Labels</label>
+                <div class="flex flex-wrap gap-4">
+                    @foreach ($labels as $label)
+                        <label class="inline-flex items-center space-x-2 text-sm">
+                            <input type="checkbox" value="{{ $label->id }}" wire:model="form.selectedLabels" 
+                                class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <span>{{ $label->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
             </div>
         </div>
-        <div>
-            <label for="labels" class="mb-1 block text-sm font-medium text-gray-700">Labels</label>
-            <div class="flex space-x-6">
-                @foreach ($labels as $label)
-                    <label class="flex items-center space-x-2 text-sm font-medium text-gray-700">
-                        <input type="checkbox" value="{{ $label->id }}" wire:model="form.selectedLabels"
-                            class="text-primary-600 focus:border-primary-300 focus:ring-primary-200 h-4 w-4 rounded border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400" />
-                        <span>{{ $label->name }}</span>
-                    </label>
-                @endforeach
-            </div>
-        </div>
-        <div>
-            <label for="attachments" class="mb-1 block text-sm font-medium text-gray-700">Files Attached</label>
-            <input id="attachments" wire:model="form.attachments" multiple type="file"
-                class="block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-blue-500 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700 focus:outline-none disabled:pointer-events-none disabled:opacity-60" />
-            @error('form.attachments.*')
+
+        <!-- Pièces jointes -->
+        <div class="space-y-4">
+            <label for="attachments" class="block text-sm font-semibold text-gray-700 mb-2 mt-2">Pièce jointe</label>
+            <input id="attachments" type="file" wire:model="form.attachment" 
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring focus:ring-blue-200 focus:ring-opacity-50 file:mr-4 file:rounded-md file:border-0 file:bg-blue-500 file:px-4 file:py-2.5 file:text-white file:font-semibold hover:file:bg-blue-700">
+            @error('form.attachment')
                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
             @enderror
         </div>
+
+        <!-- Demandeur et Agent Assigné (Visible uniquement pour les utilisateurs autorisés) -->
         @can('manage tickets')
-            <div>
-                <label for="agents" class="mb-1 block text-sm font-medium text-gray-700">Assigned Agent</label>
-                <select wire:model.live="form.agentAssigned"
+            <div class="space-y-4">
+                <label for="user_id" class="block text-sm font-semibold text-gray-700 mb-2 mt-2">Demandeur</label>
+                <select wire:model="form.user_id"
                     class="focus:border-primary-300 focus:ring-primary-200 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50">
+                    <option value="">Selectionner un demandeur</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="space-y-4">
+                <label for="agents" class="block text-sm font-semibold text-gray-700 mb-2 mt-2">Agent assigné</label>
+                <select wire:model="form.agentAssigned"
+                    class="focus:border-primary-300 focus:ring-primary-200 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50">
+                    <option value="">Selectionner un agent</option>
                     @foreach ($agents as $agent)
                         <option value="{{ $agent->id }}">{{ $agent->name }}</option>
                     @endforeach
                 </select>
             </div>
         @endcan
-        <button type="submit"
-            class="rounded-lg border border-green-500 bg-green-500 px-5 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-all hover:border-green-700 hover:bg-green-700 focus:ring focus:ring-green-200 disabled:cursor-not-allowed disabled:border-green-300 disabled:bg-green-300">
-            Submit
-        </button>
+
+        <!-- Bouton Sauvegarder -->
+        <div class="text-right mt-4">
+            <button type="submit" 
+                class="inline-flex items-center px-6 py-3 rounded-md bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                Sauvegardé
+            </button>
+        </div>
     </form>
 </div>

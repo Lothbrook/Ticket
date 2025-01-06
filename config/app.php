@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'SOFIMED'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://support.fmsline.com/public/'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -159,7 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -183,6 +183,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ])->toArray(),
 
 ];

@@ -12,6 +12,7 @@ export default defineConfig({
         }),
     ],
     server: {
+        cache: false,
         host: true,
         hmr: {
             host: 'localhost'
